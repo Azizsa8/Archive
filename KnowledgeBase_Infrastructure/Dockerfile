@@ -1,8 +1,8 @@
 FROM node:20-alpine AS builder
 WORKDIR /app
-COPY KnowledgeBase_Infrastructure/frontend/package*.json ./
+COPY frontend/package*.json ./
 RUN npm install
-COPY KnowledgeBase_Infrastructure/frontend/ .
+COPY frontend/ .
 RUN npm run build
 
 FROM node:20-alpine
