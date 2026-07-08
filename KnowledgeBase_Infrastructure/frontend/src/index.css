@@ -1,36 +1,127 @@
-@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap');
-
 :root {
-  font-family: 'Cairo', system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.6;
-  font-weight: 400;
+  /* Colors */
+  --bg: #fcfaf7;
+  --on-bg: #423d38;
+  --surface: #f3f4f6;
+  --surface-soft: #edebe9;
+  --surface-elevated: #ffffff;
+  --on-surface: #423d38;
+  --on-surface-muted: #797067;
+  --outline: #e3e0dd;
+  --outline-strong: #d1d5dc;
 
-  color-scheme: light dark;
-  color: #ffffff;
-  background-color: #f8fafc;
+  /* Brand */
+  --primary: #fe6e00;
+  --primary-strong: #ff6b00;
+  --primary-warm: #ffb74d;
+  --primary-focus: #f97015;
+  --on-primary: #ffffff;
 
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
+  /* Shell */
+  --shell-base: rgba(0, 0, 0, 0.70);
+  --on-shell: #ffffff;
+  --shell-border: rgba(255, 255, 255, 0.10);
+
+  /* Status */
+  --success: #00c758;
+  --warning: #edb200;
+  --danger: #fb2c36;
+  --info: #3080ff;
+
+  /* Status badges */
+  --status-mock-bg: #fef9c2;
+  --status-mock-fg: #874b00;
+  --status-planned-bg: #f3f4f6;
+  --status-planned-fg: #364153;
+  --status-development-bg: #dbeafe;
+  --status-development-fg: #1447e6;
+  --status-integrated-bg: #f3e8ff;
+  --status-integrated-fg: #8200da;
+  --status-production-bg: #dcfce7;
+  --status-production-fg: #016630;
+
+  /* Typography */
+  --font-sans: ui-sans-serif, system-ui, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+
+  /* Spacing */
+  --sp-xs: 4px;
+  --sp-sm: 8px;
+  --sp-md: 12px;
+  --sp-lg: 16px;
+  --sp-xl: 24px;
+  --sp-2xl: 32px;
+  --sp-3xl: 40px;
+  --sp-4xl: 64px;
+  --container-padding: 32px;
+
+  /* Rounded */
+  --r-xs: 4px;
+  --r-sm: 6px;
+  --r-md: 8px;
+  --r-lg: 12px;
+  --r-pill: 9999px;
+
+  /* Shadows */
+  --shadow-subtle: 0 1px 3px rgba(0,0,0,0.10), 0 1px 2px rgba(0,0,0,0.06);
+  --shadow-raised: 0 4px 12px rgba(0,0,0,0.12);
+  --shadow-dialog: 0 20px 25px rgba(0,0,0,0.10), 0 8px 10px rgba(0,0,0,0.04);
+
+  /* Motion */
+  --move-fast: 150ms;
+  --move-normal: 200ms;
+  --move-slow: 300ms;
+
+  /* Layout */
+  --shell-header-h: 64px;
+  --shell-sidebar-w: 280px;
+  --container-max: 1400px;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
+  font-family: var(--font-sans);
+  background: var(--bg);
+  color: var(--on-bg);
+  line-height: 1.5;
   min-height: 100vh;
-  /* Navy Blue background */
-  background: #000033; 
-  /* Fallback gradient with Navy blue and darker blue */
-  background: radial-gradient(circle at top right, #001f5c 0%, #000033 100%);
 }
 
 #root {
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 0;
   width: 100%;
-  height: 100vh;
+  min-height: 100vh;
+}
+
+input, button, textarea, select {
+  font-family: inherit;
+}
+
+a {
+  color: var(--primary);
+  text-decoration: none;
+}
+a:hover {
+  color: var(--primary-strong);
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--outline-strong);
+  border-radius: var(--r-pill);
 }
