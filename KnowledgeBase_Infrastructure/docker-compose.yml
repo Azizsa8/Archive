@@ -1,0 +1,89 @@
+version: '3.8'
+
+services:
+  frontend:
+    build: 
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: jana_frontend
+    ports:
+      - "5173:5173"
+    environment:
+      - VITE_N8N_WEBHOOK_URL=http://n8n:5678/webhook/retrieve
+    restart: unless-stopped
+
+  postgres:
+    build:
+      context: .
+      dockerfile: postgres.Dockerfile
+    container_name: jana_postgres
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: knowledgebase
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U user -d knowledgebase"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  n8n:
+    image: docker.n8n.io/n8nio/n8n
+    container_name: jana_n8n
+    ports:
+      - "5678:5678"
+    environment:
+      - N8N_HOST=0.0.0.0
+      - N8N_PORT=5678
+      - N8N_PROTOCOL=http
+      - NODE_ENV=production
+      - WEBHOOK_URL=http://localhost:5678/
+      - GENERIC_TIMEZONE=Asia/Riyadh
+    volumes:
+      - n8n_data:/home/node/.n8n
+      - scans_data:/scans
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+
+  stirling-pdf:
+    image: frooodle/s-pdf:latest
+    container_name: jana_stirling_pdf
+    ports:
+      - "8080:8080"
+    environment:
+      - DOCKER_ENABLE_SECURITY=false
+      - INSTALL_BOOK_AND_ADVANCED_HTML_OPS=false
+      - LANGS=ar_AR,en_GB
+    volumes:
+      - tess_data:/usr/share/tesseract-ocr/5/tessdata
+    restart: unless-stopped
+
+  ftp-server:
+    image: fauria/vsftpd
+    container_name: jana_ftp_scanners
+    ports:
+      - "21:21"
+      - "20:20"
+      - "21100-21110:21100-21110"
+    environment:
+      - FTP_USER=scanner
+      - FTP_PASS=scanner123
+      - PASV_ADDRESS=127.0.0.1
+      - PASV_MIN_PORT=21100
+      - PASV_MAX_PORT=21110
+    volumes:
+      - scans_data:/home/vsftpd/scanner
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+  n8n_data:
+  scans_data:
+  tess_data:

@@ -1,0 +1,630 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "provider": {
+    // OpenWork Cloud import: OPENROUTER (lpr_01kvt8ffsdeh6ssp047c0svst5). Manage this entry from Cloud settings.
+    "lpr_01kvt8ffsdeh6ssp047c0svst5": {
+      "id": "openrouter",
+      "name": "OPENROUTER",
+      "env": [
+        "OPENROUTER_API_KEY"
+      ],
+      "models": {
+        "openrouter/free": {
+          "id": "openrouter/free",
+          "name": "Free Models Router",
+          "release_date": "2026-02-01",
+          "attachment": true,
+          "reasoning": true,
+          "temperature": true,
+          "tool_call": true,
+          "cost": {
+            "input": 0,
+            "output": 0
+          },
+          "limit": {
+            "input": 200000,
+            "output": 8000,
+            "context": 200000
+          },
+          "modalities": {
+            "input": [
+              "text",
+              "image"
+            ],
+            "output": [
+              "text"
+            ]
+          }
+        },
+        "google/gemma-4-26b-a4b-it:free": {
+          "id": "google/gemma-4-26b-a4b-it:free",
+          "name": "Gemma 4 26B A4B  (free)",
+          "family": "gemma",
+          "release_date": "2026-04-02",
+          "attachment": true,
+          "reasoning": true,
+          "temperature": true,
+          "tool_call": true,
+          "cost": {
+            "input": 0,
+            "output": 0
+          },
+          "limit": {
+            "output": 32768,
+            "context": 131072
+          },
+          "modalities": {
+            "input": [
+              "image",
+              "text",
+              "video"
+            ],
+            "output": [
+              "text"
+            ]
+          }
+        },
+        "google/gemma-4-31b-it:free": {
+          "id": "google/gemma-4-31b-it:free",
+          "name": "Gemma 4 31B (free)",
+          "family": "gemma",
+          "release_date": "2026-04-02",
+          "attachment": true,
+          "reasoning": true,
+          "temperature": true,
+          "tool_call": true,
+          "cost": {
+            "input": 0,
+            "output": 0
+          },
+          "limit": {
+            "output": 8192,
+            "context": 262144
+          },
+          "modalities": {
+            "input": [
+              "image",
+              "text",
+              "video"
+            ],
+            "output": [
+              "text"
+            ]
+          }
+        },
+        "openai/gpt-oss-120b:free": {
+          "id": "openai/gpt-oss-120b:free",
+          "name": "gpt-oss-120b (free)",
+          "family": "gpt-oss",
+          "release_date": "2025-08-05",
+          "attachment": false,
+          "reasoning": true,
+          "temperature": true,
+          "tool_call": true,
+          "cost": {
+            "input": 0,
+            "output": 0
+          },
+          "limit": {
+            "output": 131072,
+            "context": 131072
+          },
+          "modalities": {
+            "input": [
+              "text"
+            ],
+            "output": [
+              "text"
+            ]
+          }
+        },
+        "openai/gpt-oss-20b:free": {
+          "id": "openai/gpt-oss-20b:free",
+          "name": "gpt-oss-20b (free)",
+          "family": "gpt-oss",
+          "release_date": "2025-08-05",
+          "attachment": false,
+          "reasoning": true,
+          "temperature": true,
+          "tool_call": true,
+          "cost": {
+            "input": 0,
+            "output": 0
+          },
+          "limit": {
+            "output": 32768,
+            "context": 131072
+          },
+          "modalities": {
+            "input": [
+              "text"
+            ],
+            "output": [
+              "text"
+            ]
+          }
+        },
+        "nousresearch/hermes-3-llama-3.1-405b:free": {
+          "id": "nousresearch/hermes-3-llama-3.1-405b:free",
+          "name": "Hermes 3 405B Instruct (free)",
+          "family": "hermes",
+          "release_date": "2024-08-16",
+          "attachment": false,
+          "reasoning": false,
+          "temperature": true,
+          "tool_call": false,
+          "cost": {
+            "input": 0,
+            "output": 0
+          },
+          "limit": {
+            "output": 131072,
+            "context": 131072
+          },
+          "modalities": {
+            "input": [
+              "text"
+            ],
+            "output": [
+              "text"
+            ]
+          }
+        },
+        "poolside/laguna-m.1:free": {
+          "id": "poolside/laguna-m.1:free",
+          "name": "Laguna M.1 (free)",
+          "release_date": "2026-04-28",
+          "attachment": false,
+          "reasoning": true,
+          "temperature": true,
+          "tool_call": true,
+          "interleaved": {
+            "field": "reasoning_content"
+          },
+          "cost": {
+            "input": 0,
+            "output": 0
+          },
+          "limit": {
+            "output": 32768,
+            "context": 262144
+          },
+          "modalities": {
+            "input": [
+              "text"
+            ],
+            "output": [
+              "text"
+            ]
+          }
+        },
+        "poolside/laguna-xs.2:free": {
+          "id": "poolside/laguna-xs.2:free",
+          "name": "Laguna XS.2 (free)",
+          "release_date": "2026-04-28",
+          "attachment": false,
+          "reasoning": true,
+          "temperature": true,
+          "tool_call": true,
+          "interleaved": {
+            "field": "reasoning_content"
+          },
+          "cost": {
+            "input": 0,
+            "output": 0
+          },
+          "limit": {
+            "output": 32768,
+            "context": 262144
+          },
+          "modalities": {
+            "input": [
+              "text"
+            ],
+            "output": [
+              "text"
+            ]
+          }
+        },
+        "liquid/lfm-2.5-1.2b-instruct:free": {
+          "id": "liquid/lfm-2.5-1.2b-instruct:free",
+          "name": "LFM2.5-1.2B-Instruct (free)",
+          "family": "liquid",
+          "release_date": "2026-01-20",
+          "attachment": false,
+          "reasoning": false,
+          "temperature": true,
+          "tool_call": false,
+          "cost": {
+            "input": 0,
+            "output": 0
+          },
+          "limit": {
+            "output": 32768,
+            "context": 32768
+          },
+          "modalities": {
+            "input": [
+              "text"
+            ],
+            "output": [
+              "text"
+            ]
+          }
+        },
+        "liquid/lfm-2.5-1.2b-thinking:free": {
+          "id": "liquid/lfm-2.5-1.2b-thinking:free",
+          "name": "LFM2.5-1.2B-Thinking (free)",
+          "family": "liquid",
+          "release_date": "2026-01-20",
+          "attachment": false,
+          "reasoning": true,
+          "temperature": true,
+          "tool_call": true,
+          "cost": {
+            "input": 0,
+            "output": 0
+          },
+          "limit": {
+            "output": 32768,
+            "context": 32768
+          },
+          "modalities": {
+            "input": [
+              "text"
+            ],
+            "output": [
+              "text"
+            ]
+          }
+        },
+        "meta-llama/llama-3.2-3b-instruct:free": {
+          "id": "meta-llama/llama-3.2-3b-instruct:free",
+          "name": "Llama 3.2 3B Instruct (free)",
+          "family": "llama",
+          "release_date": "2024-09-25",
+          "attachment": false,
+          "reasoning": false,
+          "temperature": true,
+          "tool_call": false,
+          "cost": {
+            "input": 0,
+            "output": 0
+          },
+          "limit": {
+            "output": 131072,
+            "context": 131072
+          },
+          "modalities": {
+            "input": [
+              "text"
+            ],
+            "output": [
+              "text"
+            ]
+          }
+        },
+        "meta-llama/llama-3.3-70b-instruct:free": {
+          "id": "meta-llama/llama-3.3-70b-instruct:free",
+          "name": "Llama 3.3 70B Instruct (free)",
+          "family": "llama",
+          "release_date": "2024-12-06",
+          "attachment": false,
+          "reasoning": false,
+          "temperature": true,
+          "tool_call": true,
+          "cost": {
+            "input": 0,
+            "output": 0
+          },
+          "limit": {
+            "output": 131072,
+            "context": 65536
+          },
+          "modalities": {
+            "input": [
+              "text"
+            ],
+            "output": [
+              "text"
+            ]
+          }
+        },
+        "nvidia/nemotron-3-nano-30b-a3b:free": {
+          "id": "nvidia/nemotron-3-nano-30b-a3b:free",
+          "name": "Nemotron 3 Nano 30B A3B (free)",
+          "family": "nemotron",
+          "release_date": "2025-12-15",
+          "attachment": false,
+          "reasoning": true,
+          "temperature": true,
+          "tool_call": true,
+          "cost": {
+            "input": 0,
+            "output": 0
+          },
+          "limit": {
+            "output": 256000,
+            "context": 256000
+          },
+          "modalities": {
+            "input": [
+              "text"
+            ],
+            "output": [
+              "text"
+            ]
+          }
+        },
+        "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free": {
+          "id": "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free",
+          "name": "Nemotron 3 Nano Omni (free)",
+          "family": "nemotron",
+          "release_date": "2026-04-28",
+          "attachment": true,
+          "reasoning": true,
+          "temperature": true,
+          "tool_call": true,
+          "cost": {
+            "input": 0,
+            "output": 0
+          },
+          "limit": {
+            "output": 65536,
+            "context": 256000
+          },
+          "modalities": {
+            "input": [
+              "text",
+              "image",
+              "video",
+              "audio"
+            ],
+            "output": [
+              "text"
+            ]
+          }
+        },
+        "nvidia/nemotron-3-super-120b-a12b:free": {
+          "id": "nvidia/nemotron-3-super-120b-a12b:free",
+          "name": "Nemotron 3 Super (free)",
+          "family": "nemotron",
+          "release_date": "2026-03-11",
+          "attachment": false,
+          "reasoning": true,
+          "temperature": true,
+          "tool_call": true,
+          "cost": {
+            "input": 0,
+            "output": 0
+          },
+          "limit": {
+            "output": 262144,
+            "context": 262144
+          },
+          "modalities": {
+            "input": [
+              "text"
+            ],
+            "output": [
+              "text"
+            ]
+          }
+        },
+        "nvidia/nemotron-3-ultra-550b-a55b:free": {
+          "id": "nvidia/nemotron-3-ultra-550b-a55b:free",
+          "name": "Nemotron 3 Ultra (free)",
+          "family": "nemotron",
+          "release_date": "2026-06-04",
+          "attachment": false,
+          "reasoning": true,
+          "temperature": true,
+          "tool_call": true,
+          "cost": {
+            "input": 0,
+            "output": 0
+          },
+          "limit": {
+            "output": 65536,
+            "context": 1000000
+          },
+          "modalities": {
+            "input": [
+              "text"
+            ],
+            "output": [
+              "text"
+            ]
+          }
+        },
+        "nvidia/nemotron-3.5-content-safety:free": {
+          "id": "nvidia/nemotron-3.5-content-safety:free",
+          "name": "Nemotron 3.5 Content Safety (free)",
+          "family": "nemotron",
+          "release_date": "2026-06-04",
+          "attachment": true,
+          "reasoning": true,
+          "temperature": true,
+          "tool_call": false,
+          "cost": {
+            "input": 0,
+            "output": 0
+          },
+          "limit": {
+            "output": 8192,
+            "context": 128000
+          },
+          "modalities": {
+            "input": [
+              "text",
+              "image"
+            ],
+            "output": [
+              "text"
+            ]
+          }
+        },
+        "nvidia/nemotron-nano-12b-v2-vl:free": {
+          "id": "nvidia/nemotron-nano-12b-v2-vl:free",
+          "name": "Nemotron Nano 12B 2 VL (free)",
+          "family": "nemotron",
+          "release_date": "2025-10-28",
+          "attachment": true,
+          "reasoning": true,
+          "temperature": true,
+          "tool_call": true,
+          "cost": {
+            "input": 0,
+            "output": 0
+          },
+          "limit": {
+            "output": 128000,
+            "context": 128000
+          },
+          "modalities": {
+            "input": [
+              "text",
+              "image",
+              "video"
+            ],
+            "output": [
+              "text"
+            ]
+          }
+        },
+        "nvidia/nemotron-nano-9b-v2:free": {
+          "id": "nvidia/nemotron-nano-9b-v2:free",
+          "name": "Nemotron Nano 9B V2 (free)",
+          "family": "nemotron",
+          "release_date": "2025-08-18",
+          "attachment": false,
+          "reasoning": true,
+          "temperature": true,
+          "tool_call": true,
+          "cost": {
+            "input": 0,
+            "output": 0
+          },
+          "limit": {
+            "output": 128000,
+            "context": 128000
+          },
+          "modalities": {
+            "input": [
+              "text"
+            ],
+            "output": [
+              "text"
+            ]
+          }
+        },
+        "cohere/north-mini-code:free": {
+          "id": "cohere/north-mini-code:free",
+          "name": "North Mini Code (free)",
+          "family": "north",
+          "release_date": "2026-06-17",
+          "attachment": false,
+          "reasoning": true,
+          "temperature": true,
+          "tool_call": true,
+          "cost": {
+            "input": 0,
+            "output": 0
+          },
+          "limit": {
+            "output": 64000,
+            "context": 256000
+          },
+          "modalities": {
+            "input": [
+              "text"
+            ],
+            "output": [
+              "text"
+            ]
+          }
+        },
+        "qwen/qwen3-coder:free": {
+          "id": "qwen/qwen3-coder:free",
+          "name": "Qwen3 Coder 480B A35B (free)",
+          "family": "qwen",
+          "release_date": "2025-07-23",
+          "attachment": false,
+          "reasoning": false,
+          "temperature": true,
+          "tool_call": true,
+          "cost": {
+            "input": 0,
+            "output": 0
+          },
+          "limit": {
+            "output": 262000,
+            "context": 262000
+          },
+          "modalities": {
+            "input": [
+              "text"
+            ],
+            "output": [
+              "text"
+            ]
+          }
+        },
+        "qwen/qwen3-next-80b-a3b-instruct:free": {
+          "id": "qwen/qwen3-next-80b-a3b-instruct:free",
+          "name": "Qwen3 Next 80B A3B Instruct (free)",
+          "family": "qwen",
+          "release_date": "2025-09",
+          "attachment": false,
+          "reasoning": false,
+          "temperature": true,
+          "tool_call": true,
+          "cost": {
+            "input": 0,
+            "output": 0
+          },
+          "limit": {
+            "output": 262144,
+            "context": 262144
+          },
+          "modalities": {
+            "input": [
+              "text"
+            ],
+            "output": [
+              "text"
+            ]
+          }
+        },
+        "cognitivecomputations/dolphin-mistral-24b-venice-edition:free": {
+          "id": "cognitivecomputations/dolphin-mistral-24b-venice-edition:free",
+          "name": "Uncensored (free)",
+          "family": "mistral",
+          "release_date": "2025-07-09",
+          "attachment": false,
+          "reasoning": false,
+          "temperature": true,
+          "tool_call": false,
+          "cost": {
+            "input": 0,
+            "output": 0
+          },
+          "limit": {
+            "output": 32768,
+            "context": 32768
+          },
+          "modalities": {
+            "input": [
+              "text"
+            ],
+            "output": [
+              "text"
+            ]
+          }
+        }
+      },
+      "npm": "@openrouter/ai-sdk-provider",
+      "api": "https://openrouter.ai/api/v1"
+    }
+  }
+}

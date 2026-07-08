@@ -1,0 +1,149 @@
+{
+  "name": "Jana Holdings - Advanced Ingestion & OCR Pipeline",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "seconds",
+              "secondsInterval": 15
+            }
+          ]
+        }
+      },
+      "id": "e6f42444-2454-4f01-a128-4e8c149d8632",
+      "name": "Scanner Watcher (Trigger)",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1,
+      "position": [ 0, 300 ]
+    },
+    {
+      "parameters": {
+        "fileSelector": "/scans/*.pdf",
+        "options": {}
+      },
+      "id": "d0408ab2-140b-48c5-9279-8ab1778996b5",
+      "name": "Fetch Scanned PDFs",
+      "type": "n8n-nodes-base.readFiles",
+      "typeVersion": 1,
+      "position": [ 200, 300 ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://stirling-pdf:8080/api/v1/misc/ocr",
+        "sendBody": true,
+        "contentType": "multipart-form-data",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "languages",
+              "value": "ara"
+            },
+            {
+              "name": "ocrType",
+              "value": "force-ocr"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "accept",
+              "value": "*/*"
+            }
+          ]
+        },
+        "options": {},
+        "sendBinaryData": true,
+        "binaryPropertyName": "data"
+      },
+      "id": "stirling-ocr-node",
+      "name": "Stirling PDF (Arabic OCR)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [ 400, 300 ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent?key={{$env.GEMINI_API_KEY}}",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"contents\": [\n    {\n      \"parts\": [\n        {\n          \"text\": \"You are an Arabic document analysis AI. Extract the following metadata from this Arabic document as JSON: Document_Type, Department, Key_Dates (JSON), Entities (JSON), Monetary_Values (JSON), and Summary (3 lines in Arabic). Also extract the full_text.\"\n        },\n        {\n          \"inlineData\": {\n            \"mimeType\": \"application/pdf\",\n            \"data\": \"{{$binary.data.data}}\"\n          }\n        }\n      ]\n    }\n  ],\n  \"generationConfig\": {\n    \"responseMimeType\": \"application/json\"\n  }\n}",
+        "options": {}
+      },
+      "id": "gemini-extract-node",
+      "name": "Gemini 1.5 Pro - Metadata Extraction",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [ 600, 300 ]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "INSERT INTO documents (title, document_type, department, key_dates, entities, monetary_values, summary, full_text, file_path) VALUES ('{{$json.title || \"Unnamed\"}}', '{{$json.Document_Type}}', '{{$json.Department}}', '{{JSON.stringify($json.Key_Dates)}}', '{{JSON.stringify($json.Entities)}}', '{{JSON.stringify($json.Monetary_Values)}}', '{{$json.Summary}}', '{{$json.full_text}}', '{{$binary.data.fileName}}') RETURNING id;",
+        "options": {}
+      },
+      "id": "db8d6268-9642-4bdf-8798-251fdf3e2b26",
+      "name": "Insert into PostgreSQL",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.3,
+      "position": [ 800, 300 ],
+      "credentials": {
+        "postgres": {
+          "id": "postgres_cred_id",
+          "name": "Postgres account"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Scanner Watcher (Trigger)": {
+      "main": [
+        [
+          {
+            "node": "Fetch Scanned PDFs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch Scanned PDFs": {
+      "main": [
+        [
+          {
+            "node": "Stirling PDF (Arabic OCR)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Stirling PDF (Arabic OCR)": {
+      "main": [
+        [
+          {
+            "node": "Gemini 1.5 Pro - Metadata Extraction",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gemini 1.5 Pro - Metadata Extraction": {
+      "main": [
+        [
+          {
+            "node": "Insert into PostgreSQL",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }
+}

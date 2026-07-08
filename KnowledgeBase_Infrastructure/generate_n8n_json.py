@@ -1,0 +1,249 @@
+import json
+import os
+
+nodes = [
+    {
+        "id": "waha-webhook-trigger",
+        "name": "WAHA Webhook Trigger",
+        "type": "n8n-nodes-base.webhook",
+        "typeVersion": 1.1,
+        "position": [1000, 400],
+        "parameters": {
+            "httpMethod": "POST",
+            "path": "waha-incoming",
+            "options": {}
+        }
+    },
+    {
+        "id": "route-types",
+        "name": "Route Types",
+        "type": "n8n-nodes-base.switch",
+        "typeVersion": 3.2,
+        "position": [1200, 400],
+        "parameters": {
+            "rules": {
+                "values": [
+                    {
+                        "outputKey": "Text",
+                        "conditions": {
+                            "options": {"caseSensitive": True},
+                            "combinator": "and",
+                            "conditions": [{"operator": {"type": "string", "operation": "equals"}, "leftValue": "={{ $json.body.event }}", "rightValue": "message"}]
+                        }
+                    }
+                ]
+            }
+        }
+    },
+    {
+        "id": "map-text-prompt",
+        "name": "Map text prompt",
+        "type": "n8n-nodes-base.set",
+        "typeVersion": 3.4,
+        "position": [1400, 400],
+        "parameters": {
+            "assignments": {
+                "assignments": [
+                    {"name": "text", "type": "string", "value": "={{ $json.body.payload.body }}"}
+                ]
+            }
+        }
+    },
+    {
+        "id": "kb-agent",
+        "name": "Knowledge Base Agent",
+        "type": "@n8n/n8n-nodes-langchain.agent",
+        "typeVersion": 1.9,
+        "position": [1700, 400],
+        "parameters": {
+            "text": "={{ $json.text }}",
+            "options": {
+                "systemMessage": "You are Jana-LM, the advanced Arabic AI assistant for Jana Holdings. Always reply in professional Arabic."
+            }
+        }
+    },
+    {
+        "id": "gemini-chat",
+        "name": "Gemini Chat Model",
+        "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+        "typeVersion": 1,
+        "position": [1700, 600],
+        "parameters": {
+            "model": "gemini-1.5-flash",
+            "options": {}
+        },
+        "credentials": {
+            "googleApi": {"id": "", "name": ""}
+        }
+    },
+    {
+        "id": "memory",
+        "name": "Simple Memory",
+        "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+        "typeVersion": 1.3,
+        "position": [1850, 600],
+        "parameters": {
+            "sessionKey": "=memory_{{ $('WAHA Webhook Trigger').item.json.body.payload.from }}",
+            "sessionIdType": "customKey"
+        }
+    },
+    {
+        "id": "vector-search",
+        "name": "Postgres Vector Search",
+        "type": "@n8n/n8n-nodes-langchain.vectorStorePostgres",
+        "typeVersion": 1,
+        "position": [2000, 600],
+        "parameters": {
+            "mode": "retrieve-as-tool",
+            "options": {},
+            "toolName": "search_jana_docs",
+            "toolDescription": "Retrieve Jana Holdings documentation."
+        }
+    },
+    {
+        "id": "gemini-embeddings-search",
+        "name": "Gemini Embeddings Search",
+        "type": "@n8n/n8n-nodes-langchain.embeddingsGoogleGemini",
+        "typeVersion": 1,
+        "position": [2000, 800],
+        "parameters": {
+            "model": "models/text-embedding-004",
+            "options": {}
+        }
+    },
+    {
+        "id": "waha-send",
+        "name": "Send Response",
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.2,
+        "position": [2300, 400],
+        "parameters": {
+            "method": "POST",
+            "url": "https://jana-lm-waha-production.up.railway.app/api/sendText",
+            "sendHeaders": True,
+            "headerParameters": {
+                "parameters": [
+                    {"name": "Content-Type", "value": "application/json"}
+                ]
+            },
+            "sendBody": True,
+            "specifyBody": "json",
+            "jsonBody": "={\n  \"chatId\": \"{{ $('WAHA Webhook Trigger').item.json.body.payload.from }}\",\n  \"text\": \"{{ $json.output }}\",\n  \"session\": \"default\"\n}"
+        }
+    },
+    {
+        "id": "manual-trigger",
+        "name": "When clicking \"Execute Workflow\"",
+        "type": "n8n-nodes-base.manualTrigger",
+        "typeVersion": 1,
+        "position": [1000, -200],
+        "parameters": {}
+    },
+    {
+        "id": "fetch-files",
+        "name": "Fetch Documents",
+        "type": "n8n-nodes-base.readFiles",
+        "typeVersion": 1,
+        "position": [1200, -200],
+        "parameters": {
+            "fileSelector": "/scans/*.*"
+        }
+    },
+    {
+        "id": "doc-loader",
+        "name": "Document Section Loader",
+        "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+        "typeVersion": 1,
+        "position": [1500, -200],
+        "parameters": {
+            "options": {}
+        }
+    },
+    {
+        "id": "doc-chunker",
+        "name": "Document Chunker",
+        "type": "@n8n/n8n-nodes-langchain.textSplitterRecursiveCharacterTextSplitter",
+        "typeVersion": 1,
+        "position": [1500, 0],
+        "parameters": {
+            "chunkSize": 1000,
+            "chunkOverlap": 100
+        }
+    },
+    {
+        "id": "vector-insert",
+        "name": "Postgres Vector Store Inserter",
+        "type": "@n8n/n8n-nodes-langchain.vectorStorePostgres",
+        "typeVersion": 1,
+        "position": [1800, -200],
+        "parameters": {
+            "mode": "insert",
+            "options": {}
+        }
+    },
+    {
+        "id": "gemini-embeddings-insert",
+        "name": "Gemini Embeddings Insert",
+        "type": "@n8n/n8n-nodes-langchain.embeddingsGoogleGemini",
+        "typeVersion": 1,
+        "position": [1800, 0],
+        "parameters": {
+            "model": "models/text-embedding-004",
+            "options": {}
+        }
+    }
+]
+
+connections = {
+    "WAHA Webhook Trigger": {
+        "main": [[{"node": "Route Types", "type": "main", "index": 0}]]
+    },
+    "Route Types": {
+        "main": [[{"node": "Map text prompt", "type": "main", "index": 0}]]
+    },
+    "Map text prompt": {
+        "main": [[{"node": "Knowledge Base Agent", "type": "main", "index": 0}]]
+    },
+    "Knowledge Base Agent": {
+        "main": [[{"node": "Send Response", "type": "main", "index": 0}]]
+    },
+    "Gemini Chat Model": {
+        "ai_languageModel": [[{"node": "Knowledge Base Agent", "type": "ai_languageModel", "index": 0}]]
+    },
+    "Simple Memory": {
+        "ai_memory": [[{"node": "Knowledge Base Agent", "type": "ai_memory", "index": 0}]]
+    },
+    "Postgres Vector Search": {
+        "ai_tool": [[{"node": "Knowledge Base Agent", "type": "ai_tool", "index": 0}]]
+    },
+    "Gemini Embeddings Search": {
+        "ai_embedding": [[{"node": "Postgres Vector Search", "type": "ai_embedding", "index": 0}]]
+    },
+    "When clicking \"Execute Workflow\"": {
+        "main": [[{"node": "Fetch Documents", "type": "main", "index": 0}]]
+    },
+    "Fetch Documents": {
+        "main": [[{"node": "Postgres Vector Store Inserter", "type": "main", "index": 0}]]
+    },
+    "Document Section Loader": {
+        "ai_document": [[{"node": "Postgres Vector Store Inserter", "type": "ai_document", "index": 0}]]
+    },
+    "Document Chunker": {
+        "ai_textSplitter": [[{"node": "Document Section Loader", "type": "ai_textSplitter", "index": 0}]]
+    },
+    "Gemini Embeddings Insert": {
+        "ai_embedding": [[{"node": "Postgres Vector Store Inserter", "type": "ai_embedding", "index": 0}]]
+    }
+}
+
+workflow = {
+    "name": "Jana Holdings - WAHA LangChain Workflow",
+    "nodes": nodes,
+    "connections": connections
+}
+
+filepath = r"C:\Users\AISAR\OneDrive\Desktop\ARCHIVE\KnowledgeBase_Infrastructure\n8n_workflows\jana_waha_langchain_workflow.json"
+with open(filepath, "w") as f:
+    json.dump(workflow, f, indent=2)
+
+print(f"Created workflow at {filepath}")

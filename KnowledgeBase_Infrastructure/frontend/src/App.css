@@ -1,0 +1,304 @@
+.app-wrapper {
+  display: flex;
+  height: 100vh;
+  width: 100%;
+  direction: rtl; /* Arabic Right-to-Left */
+  font-family: 'Cairo', sans-serif;
+  color: #fff;
+}
+
+/* SIDEBAR - Sources (Right side in RTL) */
+.sidebar {
+  width: 320px;
+  background: rgba(255, 255, 255, 0.03);
+  border-left: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem;
+  box-shadow: -4px 0 15px rgba(0, 0, 0, 0.2);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.brand h1 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0;
+  color: #FFA500; /* Orange Branding */
+  letter-spacing: 0.5px;
+}
+
+.brand-icon {
+  background: #FFA500;
+  color: #000033;
+  padding: 8px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sources-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.sources-header h2 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.add-source-btn {
+  background: transparent;
+  border: 1px dashed rgba(255, 255, 255, 0.3);
+  color: #fff;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.add-source-btn:hover {
+  background: rgba(255, 165, 0, 0.1);
+  border-color: #FFA500;
+  color: #FFA500;
+}
+
+.source-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  overflow-y: auto;
+  flex-grow: 1;
+}
+
+.source-item {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 1rem;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.source-item:hover, .source-item.active {
+  background: rgba(255, 165, 0, 0.1);
+  border-color: #FFA500;
+}
+
+.source-item-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.source-item-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.source-item-desc {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.audio-overview-card {
+  margin-top: auto;
+  background: linear-gradient(135deg, rgba(255, 165, 0, 0.2) 0%, rgba(255, 165, 0, 0.05) 100%);
+  border: 1px solid rgba(255, 165, 0, 0.3);
+  padding: 1.25rem;
+  border-radius: 16px;
+  text-align: center;
+}
+
+.audio-btn {
+  background: #FFA500;
+  color: #000033;
+  border: none;
+  border-radius: 24px;
+  padding: 0.75rem 1.5rem;
+  font-weight: 700;
+  font-family: 'Cairo', sans-serif;
+  cursor: pointer;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  transition: transform 0.2s;
+}
+
+.audio-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(255, 165, 0, 0.4);
+}
+
+/* MAIN CHAT AREA */
+.main-area {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  background: #000033; /* Pure Navy */
+}
+
+.chat-header {
+  padding: 1.5rem 2rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.chat-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.chat-history {
+  flex-grow: 1;
+  padding: 2rem;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.message {
+  max-width: 80%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.message.user {
+  align-self: flex-start; /* Because RTL */
+  background: #FFA500;
+  color: #000033;
+  padding: 1rem 1.5rem;
+  border-radius: 16px 16px 0 16px;
+  font-weight: 600;
+}
+
+.message.ai {
+  align-self: flex-end; /* Because RTL */
+  background: rgba(255, 255, 255, 0.05);
+  padding: 1.5rem;
+  border-radius: 16px 16px 16px 0;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  width: 100%;
+}
+
+.citations-pill-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.citation-pill {
+  background: rgba(255, 165, 0, 0.15);
+  color: #FFA500;
+  border: 1px solid rgba(255, 165, 0, 0.3);
+  padding: 0.25rem 0.75rem;
+  border-radius: 16px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  transition: background 0.2s;
+}
+
+.citation-pill:hover {
+  background: rgba(255, 165, 0, 0.25);
+}
+
+.input-container {
+  padding: 1.5rem 2rem;
+  background: linear-gradient(to top, #000033 80%, transparent);
+}
+
+.input-box {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 24px;
+  display: flex;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.input-box input {
+  flex-grow: 1;
+  background: transparent;
+  border: none;
+  color: #fff;
+  padding: 1rem;
+  font-size: 1.1rem;
+  outline: none;
+  font-family: 'Cairo', sans-serif;
+}
+
+.input-box input::placeholder {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.send-btn {
+  background: #FFA500;
+  color: #000033;
+  border: none;
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.send-btn:hover {
+  transform: scale(1.05);
+}
+
+/* NotebookLM specific suggested questions */
+.suggested-questions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+  justify-content: center;
+}
+
+.suggested-btn {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: rgba(255, 255, 255, 0.8);
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-family: 'Cairo', sans-serif;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 0.9rem;
+}
+
+.suggested-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  border-color: #fff;
+}

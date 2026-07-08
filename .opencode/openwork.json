@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "workspace": {
+    "name": "ARCHIVE",
+    "createdAt": 1783520126306,
+    "preset": "starter"
+  },
+  "authorizedRoots": [
+    "C:\\Users\\AISAR\\OneDrive\\Desktop\\ARCHIVE"
+  ],
+  "reload": null
+}

@@ -1,0 +1,120 @@
+{
+  "name": "Jana-LM Retrieval API",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "retrieve",
+        "options": {}
+      },
+      "id": "2b61dc73-eb83-4a6c-9c76-c2df8b1c4b78",
+      "name": "Webhook (API Entry)",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1.1,
+      "position": [ 200, 300 ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://generativelanguage.googleapis.com/v1beta/models/text-embedding-004:embedContent?key={{$env.GEMINI_API_KEY}}",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"model\": \"models/text-embedding-004\",\n  \"content\": {\n    \"parts\": [\n      {\n        \"text\": \"{{$json.body.query}}\"\n      }\n    ]\n  }\n}",
+        "options": {}
+      },
+      "id": "5fa23d4c-a111-4f11-8288-154dfc2b291c",
+      "name": "Gemini - Create Query Embedding",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [ 400, 300 ]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT * FROM match_documents_with_sources('{{JSON.stringify($json.embedding.values)}}', 0.4, 5, '{{JSON.stringify($('Webhook (API Entry)').item.json.body.selected_source_ids)}}');",
+        "options": {}
+      },
+      "id": "c1f72a42-9f3a-4a24-8df6-981c2fdf567a",
+      "name": "Postgres Vector Search",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.3,
+      "position": [ 600, 300 ],
+      "credentials": {
+        "postgres": {
+          "id": "postgres_cred_id",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent?key={{$env.GEMINI_API_KEY}}",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"contents\": [\n    {\n      \"parts\": [\n        {\n          \"text\": \"أنت مساعد ذكي لشركة جنى القابضة. أجب على استفسار المستخدم بناءً على المستندات المحددة أدناه باللغة العربية. الاستفسار: {{$('Webhook (API Entry)').item.json.body.query}}. المستندات: {{$json.documents}}\"\n        }\n      ]\n    }\n  ]\n}",
+        "options": {}
+      },
+      "id": "6d1f0d3a-1482-4f81-a9f4-2c263795b8b7",
+      "name": "Gemini - Synthesize Answer (Arabic)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [ 800, 300 ]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "45f94d93-8f6b-4e14-9b51-57a2c6d4e5f2",
+      "name": "Webhook Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [ 1000, 300 ]
+    }
+  ],
+  "connections": {
+    "Webhook (API Entry)": {
+      "main": [
+        [
+          {
+            "node": "Gemini - Create Query Embedding",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gemini - Create Query Embedding": {
+      "main": [
+        [
+          {
+            "node": "Postgres Vector Search",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres Vector Search": {
+      "main": [
+        [
+          {
+            "node": "Gemini - Synthesize Answer (Arabic)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gemini - Synthesize Answer (Arabic)": {
+      "main": [
+        [
+          {
+            "node": "Webhook Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }
+}
