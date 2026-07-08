@@ -986,7 +986,7 @@
       "typeVersion": 4.2,
       "parameters": {
         "method": "POST",
-        "url": "https://jana-lm-waha-production.up.railway.app/api/sendText",
+        "url": "https://waha-production-239fa.up.railway.app/api/sendText",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
@@ -1016,7 +1016,7 @@
       "typeVersion": 4.2,
       "parameters": {
         "method": "POST",
-        "url": "https://jana-lm-waha-production.up.railway.app/api/sendText",
+        "url": "https://waha-production-239fa.up.railway.app/api/sendText",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
