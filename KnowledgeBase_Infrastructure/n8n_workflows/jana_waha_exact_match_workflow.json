@@ -33,7 +33,13 @@
       "position": [
         3720,
         580
-      ]
+      ],
+      "credentials": {
+        "googleApi": {
+          "id": "",
+          "name": ""
+        }
+      }
     },
     {
       "id": "gemini-embed-search",
@@ -77,8 +83,8 @@
     {
       "id": "postgres-vector-search",
       "name": "Postgres Vector Search",
-      "type": "@n8n/n8n-nodes-langchain.vectorStoreSupabase",
-      "typeVersion": 1,
+      "type": "@n8n/n8n-nodes-langchain.vectorStorePGVector",
+      "typeVersion": 1.3,
       "parameters": {
         "mode": "retrieve-as-tool",
         "options": {},
@@ -88,7 +94,13 @@
       "position": [
         3940,
         580
-      ]
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "BJhNu6EUnMIKUPIe",
+          "name": "Railway PostgreSQL"
+        }
+      }
     },
     {
       "id": "8cf54cb6-7247-4036-b1e4-9a28650d700a",
@@ -134,8 +146,8 @@
     {
       "id": "postgres-vector-insert",
       "name": "Postgres Vector Store Inserter",
-      "type": "@n8n/n8n-nodes-langchain.vectorStoreSupabase",
-      "typeVersion": 1,
+      "type": "@n8n/n8n-nodes-langchain.vectorStorePGVector",
+      "typeVersion": 1.3,
       "parameters": {
         "mode": "insert",
         "options": {}
@@ -143,7 +155,13 @@
       "position": [
         1820,
         -560
-      ]
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "BJhNu6EUnMIKUPIe",
+          "name": "Railway PostgreSQL"
+        }
+      }
     },
     {
       "id": "gemini-embed-insert",
@@ -238,57 +256,6 @@
       ]
     },
     {
-      "id": "8842d0c7-082e-4b4e-b350-a8bb8f47c390",
-      "name": "OpenAI",
-      "type": "@n8n/n8n-nodes-langchain.openAi",
-      "position": [
-        2460,
-        160
-      ],
-      "parameters": {
-        "options": {},
-        "resource": "audio",
-        "operation": "translate"
-      },
-      "credentials": {
-        "openAiApi": {
-          "id": "credential-id",
-          "name": "openAiApi Credential"
-        }
-      },
-      "typeVersion": 1.8
-    },
-    {
-      "id": "a342dc14-0ffe-41ba-a3e9-853fe043f4fb",
-      "name": "OpenAI1",
-      "type": "@n8n/n8n-nodes-langchain.openAi",
-      "position": [
-        2460,
-        400
-      ],
-      "parameters": {
-        "modelId": {
-          "__rl": true,
-          "mode": "list",
-          "value": "gpt-4o-mini",
-          "cachedResultName": "GPT-4O-MINI"
-        },
-        "options": {
-          "detail": "auto"
-        },
-        "resource": "image",
-        "inputType": "base64",
-        "operation": "analyze"
-      },
-      "credentials": {
-        "openAiApi": {
-          "id": "credential-id",
-          "name": "openAiApi Credential"
-        }
-      },
-      "typeVersion": 1.8
-    },
-    {
       "id": "b1220587-fadf-4b5b-944e-b6e60b64c141",
       "name": "Extract from PDF",
       "type": "n8n-nodes-base.extractFromFile",
@@ -363,7 +330,7 @@
         740
       ],
       "parameters": {
-        "jsCode": "let requests = $(\"Download Document\").all()\n\nrequests.forEach((request) => {\n let mime_type = request.json.mime_type\n\n if (\n mime_type === \"text/calendar\" || \n mime_type === \"application/ics\" || \n mime_type === \"text/x-calendar\"\n ) {\n request.json.mime_type = \"mapped/calendar\"\n }\n\n if (\n mime_type === \"application/xml\" || \n mime_type === \"text/xml\") {\n request.json.mime_type = \"mapped/xml\"\n }\n\n if (!mime_type) {\n request.json.mime_type = $('Gets WhatsApp Document Source URL').first().json.mime_type\n }\n})\n\nreturn requests;"
+        "jsCode": "let requests = $(\"Download Document\").all()\n\nrequests.forEach((request) => {\n let mime_type = request.json.mime_type\n\n if (\n mime_type === \"text/calendar\" || \n mime_type === \"application/ics\" || \n mime_type === \"text/x-calendar\"\n ) {\n request.json.mime_type = \"mapped/calendar\"\n }\n\n if (\n mime_type === \"application/xml\" || \n mime_type === \"text/xml\") {\n request.json.mime_type = \"mapped/xml\"\n }\n\n if (!mime_type) {\n request.json.mime_type = $('Download Document from WAHA').first().json.mime_type\n }\n})\n\nreturn requests;"
       },
       "typeVersion": 2
     },
@@ -429,148 +396,12 @@
               "id": "38aec976-a32c-4b0e-85f4-c90adc16abc9",
               "name": "text",
               "type": "string",
-              "value": "={{ $json.messages[0].text.body }}"
+              "value": "=$json.body.payload.body"
             }
           ]
         }
       },
       "typeVersion": 3.4
-    },
-    {
-      "id": "7727e89d-cf21-4440-ab7f-85594eb1ec44",
-      "name": "Gets WhatsApp Voicemail Source URL",
-      "type": "n8n-nodes-base.whatsApp",
-      "position": [
-        2020,
-        160
-      ],
-      "webhookId": "bbe62f3d-8788-49d4-aae6-9e9411446d44",
-      "parameters": {
-        "resource": "media",
-        "operation": "mediaUrlGet",
-        "mediaGetId": "={{ $json.body.payload.audio.id}}"
-      },
-      "credentials": {
-        "whatsAppApi": {
-          "id": "credential-id",
-          "name": "whatsAppApi Credential"
-        }
-      },
-      "typeVersion": 1
-    },
-    {
-      "id": "08b938a1-d32e-4aa1-958f-bdabd3dfec13",
-      "name": "Gets WhatsApp Image Source URL",
-      "type": "n8n-nodes-base.whatsApp",
-      "position": [
-        2020,
-        400
-      ],
-      "webhookId": "c2982df4-1d8d-4669-a724-44ae17d11e6c",
-      "parameters": {
-        "resource": "media",
-        "operation": "mediaUrlGet",
-        "mediaGetId": "={{ $json.body.payload.image.id }}"
-      },
-      "credentials": {
-        "whatsAppApi": {
-          "id": "credential-id",
-          "name": "whatsAppApi Credential"
-        }
-      },
-      "typeVersion": 1
-    },
-    {
-      "id": "d934ce80-cdb0-476d-8896-b8c226086933",
-      "name": "Gets WhatsApp Document Source URL",
-      "type": "n8n-nodes-base.whatsApp",
-      "position": [
-        2020,
-        740
-      ],
-      "webhookId": "c2982df4-1d8d-4669-a724-44ae17d11e6c",
-      "parameters": {
-        "resource": "media",
-        "operation": "mediaUrlGet",
-        "mediaGetId": "={{ $json.body.payload.document.id }}"
-      },
-      "credentials": {
-        "whatsAppApi": {
-          "id": "credential-id",
-          "name": "whatsAppApi Credential"
-        }
-      },
-      "typeVersion": 1
-    },
-    {
-      "id": "aad1b221-0985-43e7-bc0b-312436171abe",
-      "name": "Download Voicemail",
-      "type": "n8n-nodes-base.httpRequest",
-      "position": [
-        2240,
-        160
-      ],
-      "parameters": {
-        "url": "={{ $json.url }}",
-        "options": {},
-        "authentication": "genericCredentialType",
-        "genericAuthType": "httpHeaderAuth"
-      },
-      "credentials": {
-        "httpHeaderAuth": {
-          "id": "credential-id",
-          "name": "httpHeaderAuth Credential"
-        }
-      },
-      "typeVersion": 4.2
-    },
-    {
-      "id": "dfd08bec-9d30-4125-b167-7feaeefd7afa",
-      "name": "Download Image",
-      "type": "n8n-nodes-base.httpRequest",
-      "position": [
-        2240,
-        400
-      ],
-      "parameters": {
-        "url": "={{ $json.url }}",
-        "options": {},
-        "authentication": "genericCredentialType",
-        "genericAuthType": "httpHeaderAuth"
-      },
-      "credentials": {
-        "httpHeaderAuth": {
-          "id": "credential-id",
-          "name": "httpHeaderAuth Credential"
-        }
-      },
-      "typeVersion": 4.2
-    },
-    {
-      "id": "ba3d221f-ce5c-4105-82cf-fbd11c2c0e2f",
-      "name": "Download Document",
-      "type": "n8n-nodes-base.httpRequest",
-      "position": [
-        2240,
-        740
-      ],
-      "parameters": {
-        "url": "={{ $json.url }}",
-        "options": {
-          "response": {
-            "response": {}
-          }
-        },
-        "authentication": "genericCredentialType",
-        "genericAuthType": "httpHeaderAuth"
-      },
-      "credentials": {
-        "httpHeaderAuth": {
-          "id": "credential-id",
-          "name": "httpHeaderAuth Credential"
-        }
-      },
-      "typeVersion": 4.2
     },
     {
       "id": "87ecc44f-cc1f-47e0-b995-079230be118d",
@@ -584,103 +415,92 @@
         "rules": {
           "values": [
             {
+              "name": "Text",
               "outputKey": "Text",
               "conditions": {
                 "options": {
-                  "version": 2,
-                  "leftValue": "",
-                  "caseSensitive": true,
-                  "typeValidation": "strict"
+                  "caseSensitive": true
                 },
                 "combinator": "and",
                 "conditions": [
                   {
-                    "id": "2fc5c912-629b-4cbe-b5e3-7e3f0651c628",
+                    "id": "cond-body",
                     "operator": {
                       "type": "string",
-                      "operation": "equals"
+                      "operation": "exists",
+                      "singleValue": true
                     },
-                    "leftValue": "={{ $json.messages[0].type }}",
-                    "rightValue": "text"
+                    "leftValue": "=$json.body.payload.body",
+                    "rightValue": ""
                   }
                 ]
-              },
-              "renameOutput": true
+              }
             },
             {
+              "name": "Audio",
               "outputKey": "Audio",
               "conditions": {
                 "options": {
-                  "version": 2,
-                  "leftValue": "",
-                  "caseSensitive": true,
-                  "typeValidation": "strict"
+                  "caseSensitive": true
                 },
                 "combinator": "and",
                 "conditions": [
                   {
-                    "id": "26a3d85c-0815-48ff-85ce-713129a1107c",
+                    "id": "cond-audio",
                     "operator": {
-                      "name": "filter.operator.equals",
                       "type": "string",
-                      "operation": "equals"
+                      "operation": "exists",
+                      "singleValue": true
                     },
-                    "leftValue": "={{ $json.messages[0].type }}",
-                    "rightValue": "audio"
+                    "leftValue": "=$json.body.payload.audio",
+                    "rightValue": ""
                   }
                 ]
-              },
-              "renameOutput": true
+              }
             },
             {
+              "name": "Image",
               "outputKey": "Image",
               "conditions": {
                 "options": {
-                  "version": 2,
-                  "leftValue": "",
-                  "caseSensitive": true,
-                  "typeValidation": "strict"
+                  "caseSensitive": true
                 },
                 "combinator": "and",
                 "conditions": [
                   {
-                    "id": "840b95b8-6559-4fb7-b32c-651451d6d0d2",
+                    "id": "cond-image",
                     "operator": {
-                      "name": "filter.operator.equals",
                       "type": "string",
-                      "operation": "equals"
+                      "operation": "exists",
+                      "singleValue": true
                     },
-                    "leftValue": "={{ $json.messages[0].type }}",
-                    "rightValue": "image"
+                    "leftValue": "=$json.body.payload.image",
+                    "rightValue": ""
                   }
                 ]
-              },
-              "renameOutput": true
+              }
             },
             {
+              "name": "Document",
               "outputKey": "Document",
               "conditions": {
                 "options": {
-                  "version": 2,
-                  "leftValue": "",
-                  "caseSensitive": true,
-                  "typeValidation": "strict"
+                  "caseSensitive": true
                 },
                 "combinator": "and",
                 "conditions": [
                   {
-                    "id": "3e7a07f9-b785-450c-8c68-f6b276838503",
+                    "id": "cond-document",
                     "operator": {
-                      "name": "filter.operator.equals",
                       "type": "string",
-                      "operation": "equals"
+                      "operation": "exists",
+                      "singleValue": true
                     },
-                    "leftValue": "={{ $json.messages[0].type }}",
-                    "rightValue": "document"
+                    "leftValue": "=$json.body.payload.document",
+                    "rightValue": ""
                   }
                 ]
-              },
-              "renameOutput": true
+              }
             }
           ]
         },
@@ -1038,69 +858,172 @@
         4080,
         400
       ]
+    },
+    {
+      "id": "waha-dl-audio",
+      "name": "Download Audio from WAHA",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2240,
+        400
+      ],
+      "parameters": {
+        "method": "GET",
+        "url": "=https://waha-production-239fa.up.railway.app/api/sessions/default/messages/{{ $('WAHA Webhook Trigger').item.json.body.payload.audio.id }}/media",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file"
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "waha-dl-image",
+      "name": "Download Image from WAHA",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2240,
+        700
+      ],
+      "parameters": {
+        "method": "GET",
+        "url": "=https://waha-production-239fa.up.railway.app/api/sessions/default/messages/{{ $('WAHA Webhook Trigger').item.json.body.payload.image.id }}/media",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file"
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "waha-dl-document",
+      "name": "Download Document from WAHA",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2240,
+        1000
+      ],
+      "parameters": {
+        "method": "GET",
+        "url": "=https://waha-production-239fa.up.railway.app/api/sessions/default/messages/{{ $('WAHA Webhook Trigger').item.json.body.payload.document.id }}/media",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file"
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "gemini-audio",
+      "name": "Gemini Audio Transcribe",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2460,
+        100
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "=https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={{ $env.GOOGLE_API_KEY }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\"contents\":[{\"parts\":[{\"inline_data\":{\"mime_type\":\"audio/ogg;codecs=opus\",\"data\":\"{{ $binary.data.toString('base64') }}\"}},{\"text\":\"Transcribe this audio. Return only the transcription text, nothing else.\"}]}]}"
+      }
+    },
+    {
+      "id": "map-ga",
+      "name": "Map Gemini Audio Response",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2680,
+        100
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "text",
+              "type": "string",
+              "value": "={{ $json.candidates[0].content.parts[0].text }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "gemini-img",
+      "name": "Gemini Image Analyze",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2460,
+        400
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "=https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={{ $env.GOOGLE_API_KEY }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\"contents\":[{\"parts\":[{\"inline_data\":{\"mime_type\":\"image/jpeg\",\"data\":\"{{ $binary.data.toString('base64') }}\"}},{\"text\":\"Describe this image in detail.\"}]}]}"
+      }
+    },
+    {
+      "id": "map-gi",
+      "name": "Map Gemini Image Response",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2680,
+        400
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "content",
+              "type": "string",
+              "value": "={{ $json.candidates[0].content.parts[0].text }}"
+            }
+          ]
+        }
+      }
     }
   ],
   "pinData": {},
   "connections": {
-    "OpenAI": {
-      "main": [
-        [
-          {
-            "node": "Knowledge Base Agent",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "OpenAI1": {
-      "main": [
-        [
-          {
-            "node": "Map image prompt",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "Map JSON": {
       "main": [
         [
           {
             "node": "Map document prompt",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Route Types": {
-      "main": [
-        [
-          {
-            "node": "Map text prompt",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "Gets WhatsApp Voicemail Source URL",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "Gets WhatsApp Image Source URL",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "Gets WhatsApp Document Source URL",
             "type": "main",
             "index": 0
           }
@@ -1113,17 +1036,6 @@
           {
             "node": "Knowledge Base Agent",
             "type": "ai_memory",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Download Image": {
-      "main": [
-        [
-          {
-            "node": "OpenAI1",
-            "type": "main",
             "index": 0
           }
         ]
@@ -1184,33 +1096,11 @@
         ]
       ]
     },
-    "Download Document": {
-      "main": [
-        [
-          {
-            "node": "Map file extensions",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "Extract from XLSX": {
       "main": [
         [
           {
             "node": "Map JSON",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Download Voicemail": {
-      "main": [
-        [
-          {
-            "node": "OpenAI",
             "type": "main",
             "index": 0
           }
@@ -1353,44 +1243,11 @@
         ]
       ]
     },
-    "Gets WhatsApp Image Source URL": {
-      "main": [
-        [
-          {
-            "node": "Download Image",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "When clicking \"Execute Workflow\"": {
       "main": [
         [
           {
             "node": "Google Docs Importer",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Gets WhatsApp Document Source URL": {
-      "main": [
-        [
-          {
-            "node": "Download Document",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Gets WhatsApp Voicemail Source URL": {
-      "main": [
-        [
-          {
-            "node": "Download Voicemail",
             "type": "main",
             "index": 0
           }
@@ -1455,6 +1312,104 @@
     "Send Unsupported Response": {
       "main": [
         []
+      ]
+    },
+    "Route Types": {
+      "main": [
+        [
+          {
+            "node": "Map text prompt",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Download Audio from WAHA",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Download Image from WAHA",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Download Document from WAHA",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download Audio from WAHA": {
+      "main": [
+        [
+          {
+            "node": "Gemini Audio Transcribe",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gemini Audio Transcribe": {
+      "main": [
+        [
+          {
+            "node": "Map Gemini Audio Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Map Gemini Audio Response": {
+      "main": [
+        [
+          {
+            "node": "Knowledge Base Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download Image from WAHA": {
+      "main": [
+        [
+          {
+            "node": "Gemini Image Analyze",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gemini Image Analyze": {
+      "main": [
+        [
+          {
+            "node": "Map Gemini Image Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Map Gemini Image Response": {
+      "main": [
+        [
+          {
+            "node": "Map image prompt",
+            "type": "main",
+            "index": 0
+          }
+        ]
       ]
     }
   }
